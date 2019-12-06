@@ -1,0 +1,72 @@
+#!/usr/bin/env python
+#
+# unwarp_panos
+# ------------
+# Command-line interface for unwarping spherical panoramic images.
+#
+# This script will convert spherical panoramic images to use cylindrical
+# projection using the specified lookup table.
+#
+# Example Usage:
+#
+#     $ scripts/unwarp/unwarp_panos -o /data/your_dataset/unwarped \
+#           /data/your_dataset/raw
+#
+#     $ scripts/unwarp/unwarp_panos --single /data/your_dataset/img001.png
+#
+import argparse
+import glob
+import os
+
+from unwarp_panos import unwarp_panos
+
+# command-line interface
+
+parser = argparse.ArgumentParser(
+    description='Unwarp spherical panoramas to use cylindrical projection'
+)
+
+parser.add_argument('input',
+                        help='directory containing spherical input images \
+                              (or individual file for single mode)')
+parser.add_argument('--output_dir', '-o',
+                        default='./out',
+                        help='directory for unwarped cylindrical output')
+parser.add_argument('--lut', '-l',
+                        default='data/lut.npy',
+                        help='lookup table for spherical-cylindrical conversion')
+parser.add_argument('--single', '-s',
+                        dest='single',
+                        action='store_true',
+                        help='process a single file')
+parser.set_defaults(single=False)
+
+args = parser.parse_args()
+
+# verify/create the output directory
+
+try:
+    os.makedirs(args.output_dir)
+except:
+    pass
+
+# unwarp the images
+
+if args.single:
+    # unwarp a single image
+    print()
+    print('Unwarping <{}> using {}'.format(args.input, args.lut))
+    unwarp_panos([args.input], args.output_dir, lutfile=args.lut)
+    print('Output written to {}'.format(args.output_dir))
+    print()
+
+else:
+    # unwarp all png files in the given directory
+    infiles = [f for f in glob.glob(os.path.join(args.input, '*.png'))]
+    print()
+    print('Unwarping {} files from <{}> using {}'.format(len(infiles),
+                                                         args.input,
+                                                         args.lut))
+    unwarp_panos(infiles, args.output_dir, lutfile=args.lut)
+    print('Output written to {}'.format(args.output_dir))
+    print()
