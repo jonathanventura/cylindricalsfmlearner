@@ -28,6 +28,8 @@ The videos are stored as .mkv video files encoded using lossless H.264.  To extr
     
 ### Data preparation
 
+    python data/prepare_training_data.py --dataset_dir <path-to-headcam> --dataset_name 'headcam' --dump_root <output-path> --seq_length 3 --img_height 512 --img_width 2048 --val_frac 0.1
+    
 ### Training
 
 ### Testing
