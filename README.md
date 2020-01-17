@@ -1,10 +1,12 @@
 ## Unsupervised learning of depth and ego-motion from cylindrical panoramic video
 
-Code for our paper:
+This repository hosts the code for our paper.
 
 Alisha Sharma and Jonathan Ventura.  "Unsupervised Learning of Depth and Ego-Motion from Cylindrical Panoramic Video."  Proceedings of the 2019 IEEE Artificial Intelligence & Virtual Reality Conference, San Diego, CA, 2019.
 
 If you make use of this code or dataset, please cite this paper.
+
+The code is based on [SfMLearner by Zhou et al](https://github.com/tinghuiz/SfMLearner).
 
 ### Abstract
 
@@ -24,5 +26,9 @@ The videos are stored as .mkv video files encoded using lossless H.264.  To extr
 
     ffmpeg -i 2018-10-03.mkv -q:v 1 2018-10-03/%05d.png ;
     
+### Data preparation
 
+### Training
+
+### Testing
 
