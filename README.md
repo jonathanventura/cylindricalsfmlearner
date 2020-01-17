@@ -32,5 +32,7 @@ The videos are stored as .mkv video files encoded using lossless H.264.  To extr
     
 ### Training
 
+    python train.py --dataset_dir <path-to-prepared-data> --img_height 512 --img_width 2048
+    
 ### Testing
 
