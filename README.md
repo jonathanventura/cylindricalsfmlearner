@@ -14,6 +14,10 @@ We introduce a convolutional neural network model for unsupervised learning of d
 
 This paper won the best paper award at IEEE AIVR 2019!
 
+### Requirements
+
+
+
 ### Dataset
 
 Our Headcam dataset is [hosted on Zenodo](https://zenodo.org/record/3520963).
@@ -36,3 +40,17 @@ The videos are stored as .mkv video files encoded using lossless H.264.  To extr
     
 ### Testing
 
+A checkpoint for a pre-trained model on panoramas from the Headcam dataset of size 2048x512 can be downloaded [here](https://www.dropbox.com/s/jsh42caqepa62ue/checkpoint.zip?dl=1).
+
+To generate a video with depth map predictions from a directory of images:
+
+    ./gen_depth <path-to-images-directory> -o out --width 2048 --height 512 --checkpoint checkpoint/model.latest
+
+To convert a panorama to a mesh stored as a .ply file:
+
+    ./gen_ply <path-to-image> <path-to-calibration-file> -o out.ply --width 2048 --height 512 --checkpoint checkpoint/model.latest
+    
+To render the .ply as a stereo panorama, following [this guide](https://developers.google.com/vr/jump/rendering-ods-content.pdf):
+
+    ./render_ply out.ply --width 2048 --IPD 0.01
+    
