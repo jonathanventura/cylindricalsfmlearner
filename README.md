@@ -16,7 +16,14 @@ This paper won the best paper award at IEEE AIVR 2019!
 
 ### Requirements
 
+See the included Dockerfile for detailed requirements.
 
+* tensorflow
+
+For stereo panorama rendering:
+* pyopengl
+* trimesh
+* pyrender
 
 ### Dataset
 
