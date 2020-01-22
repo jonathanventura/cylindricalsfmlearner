@@ -1,0 +1,138 @@
+#!/usr/bin/env python
+#
+# gen_ply
+# ---------
+# Converts an RGB image to a mesh
+#
+# The purpose of this script is to generate a textured mesh from an input
+# image. The command-line structure is at the top of the file,
+# followed by the depth map prediction and the mesh generation.
+#
+# For more help on how to use this script, run:
+#
+#   gen_ply --help
+#
+from __future__ import division
+import argparse
+import os
+import glob
+import tqdm
+import sys
+import numpy as np
+from PIL import Image
+import tensorflow as tf
+from SfMLearner import SfMLearner
+from utils import normalize_depth_for_display
+import cv2
+os.environ['TF_CPP_MIN_LOG_LEVEL']='2'
+import trimesh 
+
+
+#################### PARSER #
+
+parser = argparse.ArgumentParser(
+    description='Convert an RGB image to a mesh.'
+)
+
+# positional args
+parser.add_argument('target', help='image to be converted')
+parser.add_argument('intrinsics', help='calibration file')
+
+# flags
+parser.add_argument('-o', '--outfile', metavar='outfile',
+                                       help='output file name',
+                                       default='out',
+                                       required=False)
+parser.add_argument('--width', metavar='w',
+                               type=int,
+                               help='input image width in pixels',
+                               default=512,
+                               required=False)
+parser.add_argument('--height', metavar='h',
+                                type=int,
+                                help='input image height in pixels',
+                                default=128,
+                                required=False)
+parser.add_argument('--checkpoint', metavar='c',
+                                    help='tensorflow checkpoint file to use',
+                                    default='checkpoints/model.latest',
+                                    required=False)
+args = parser.parse_args()
+
+# config
+target = args.target
+img_height = args.height
+img_width  = args.width
+outfile    = args.outfile
+ckpt_file  = args.checkpoint
+
+
+#################### PREDICT DEPTH #
+
+# setup graph
+print('Setting up TensorFlow graph...')
+tf.reset_default_graph() # for reruns
+sfm = SfMLearner()
+sfm.setup_inference(img_height,
+                    img_width,
+                    mode='depth')
+
+# load intrinsics
+intrinsics = np.loadtxt(args.intrinsics,delimiter=',')
+intrinsics = np.reshape(intrinsics,(3,3))
+fx = intrinsics[0,0]
+fy = intrinsics[1,1]
+cx = intrinsics[0,2]
+cy = intrinsics[1,2]
+
+# load model
+saver = tf.train.Saver([var for var in tf.model_variables()])
+with tf.Session() as sess:
+    saver.restore(sess, ckpt_file)
+
+    # open/resize image
+    with open(target, 'rb') as fh:
+        I = Image.open(fh)
+        I = I.resize((img_width, img_height), Image.ANTIALIAS)
+        I = np.array(I)
+
+        # run model
+        pred = sfm.inference(I[None,:,:,:], sess, mode='depth')
+
+        # output depth image
+        depth = pred['depth'][0,:,:,0]
+        
+        # make mesh grid on image
+        py,px = np.meshgrid(range(img_height),range(img_width),indexing='ij')
+        py = (py - cy)/fy
+        px = (px - cx)/fx
+        cylinder_coords = np.stack([px,py],axis=0)
+        X = np.sin(cylinder_coords[0])
+        Y = cylinder_coords[1]
+        Z = np.cos(cylinder_coords[0])
+        cam_coords = np.stack([X,Y,Z],axis=2) * depth[:,:,None]
+
+        # get vertices and colors
+        x = cam_coords[:,:,0]
+        y = cam_coords[:,:,1]
+        z = cam_coords[:,:,2]
+        red = I[:,:,0]
+        green = I[:,:,1]
+        blue = I[:,:,2]
+        vertices = np.stack([x.flatten(),y.flatten(),z.flatten()],axis=1)
+        vertex_colors = np.stack([red.flatten(),green.flatten(),blue.flatten()],axis=1)
+
+        # make triangle faces
+        def get_index(r,c):
+            return r*img_width+(c%img_width)
+        faces = []
+        for r in range(img_height-1):
+            for c in range(img_width):
+                faces.append([get_index(r,c),get_index(r+1,c),get_index(r,c+1)])
+                faces.append([get_index(r+1,c),get_index(r+1,c+1),get_index(r,c+1)])
+        faces = np.stack(faces,axis=0)
+
+        # export using trimesh
+        T = trimesh.Trimesh(vertices=vertices,vertex_colors=vertex_colors,faces=faces)
+        T.export(args.outfile)
+
