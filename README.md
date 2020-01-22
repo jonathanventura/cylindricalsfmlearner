@@ -54,3 +54,6 @@ To render the .ply as a stereo panorama, following [this guide](https://develope
 
     ./render_ply out.ply --width 2048 --IPD 0.01
     
+To make an anaglyph from the left- and right-eye panoramas:
+
+    ./make_anaglyph .
