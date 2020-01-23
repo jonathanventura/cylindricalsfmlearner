@@ -2,7 +2,7 @@
 
 This repository hosts the code for our paper.
 
-Alisha Sharma and Jonathan Ventura.  "Unsupervised Learning of Depth and Ego-Motion from Cylindrical Panoramic Video."  Proceedings of the 2019 IEEE Artificial Intelligence & Virtual Reality Conference, San Diego, CA, 2019.
+Alisha Sharma and Jonathan Ventura.  "[Unsupervised Learning of Depth and Ego-Motion from Cylindrical Panoramic Video](https://arxiv.org/pdf/1901.00979.pdf)."  Proceedings of the 2019 IEEE Artificial Intelligence & Virtual Reality Conference, San Diego, CA, 2019.
 
 If you make use of this code or dataset, please cite this paper.
 
