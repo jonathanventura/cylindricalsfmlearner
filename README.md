@@ -49,7 +49,7 @@ The videos are stored as .mkv video files encoded using lossless H.264.  To extr
 
 A checkpoint for a pre-trained model on panoramas from the Headcam dataset of size 2048x512 can be downloaded [here](https://www.dropbox.com/s/jsh42caqepa62ue/checkpoint.zip?dl=1).
 
-A subset of images from Headcam for testing is [here](https://www.dropbox.com/s/cf2z0kjf5zs0zey/2018-10-03-subset.zip?dl=1).
+A subset of images from Headcam for testing is [here](https://www.dropbox.com/s/cf2z0kjf5zs0zey/2018-10-03-subset.zip?dl=1) with calibration file [here](https://www.dropbox.com/s/m4p59ro6eep8ibq/intrinsics.txt?dl=0).
 
 To generate a video with depth map predictions from a directory of images:
 
