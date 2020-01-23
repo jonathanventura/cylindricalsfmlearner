@@ -66,3 +66,12 @@ To render the .ply as a stereo panorama, following [this guide](https://develope
 To make an anaglyph from the left- and right-eye panoramas:
 
     ./make_anaglyph .
+    
+Example stereo panoramas are available in the examples directory.  You can view them in stereo in a WebVR browser:
+
+* [headcam00000](examples/headcam00000)
+* [headcam00100](examples/headcam00100)
+* [headcam01000](examples/headcam01000)
+* [headcam02000](examples/headcam02000)
+* [headcam03000](examples/headcam03000)
+* [headcam04000](examples/headcam04000)
