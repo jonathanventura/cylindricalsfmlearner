@@ -67,7 +67,7 @@ To make an anaglyph from the left- and right-eye panoramas:
 
     ./make_anaglyph .
     
-Example stereo panoramas are available in the examples directory.  You can view them in stereo in a WebVR browser:
+Example stereo panoramas are available in the examples directory.  You can view them in stereo in a WebVR-enabled browser:
 
 * [headcam00000](examples/headcam00000)
 * [headcam00100](examples/headcam00100)
