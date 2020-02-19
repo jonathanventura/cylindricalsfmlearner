@@ -9,17 +9,13 @@ FROM nvidia/cuda:9.0-cudnn7-devel-ubuntu16.04
 RUN APT_INSTALL="apt-get install -y --no-install-recommends" && \
     PIP_INSTALL="python -m pip --no-cache-dir install --upgrade" && \
     GIT_CLONE="git clone --depth 10" && \
-
     rm -rf /var/lib/apt/lists/* \
            /etc/apt/sources.list.d/cuda.list \
            /etc/apt/sources.list.d/nvidia-ml.list && \
-
     apt-get update && \
-
 # ==================================================================
 # tools
 # ------------------------------------------------------------------
-
     DEBIAN_FRONTEND=noninteractive $APT_INSTALL \
         build-essential \
         ca-certificates \
@@ -28,11 +24,9 @@ RUN APT_INSTALL="apt-get install -y --no-install-recommends" && \
         vim \
         wget \
         && \
-
 # ==================================================================
 # python
 # ------------------------------------------------------------------
-
     DEBIAN_FRONTEND=noninteractive $APT_INSTALL \
         software-properties-common \
         && \
@@ -63,19 +57,15 @@ RUN APT_INSTALL="apt-get install -y --no-install-recommends" && \
         joblib==0.12.5 \
         tqdm==4.26.0 \
         && \
-
 # ==================================================================
 # tensorflow
 # ------------------------------------------------------------------
-
     $PIP_INSTALL \
         tensorflow==1.11.0 \
         && \
-
 # ==================================================================
 # config & cleanup
 # ------------------------------------------------------------------
-
     ldconfig && \
     apt-get clean && \
     apt-get autoremove && \
